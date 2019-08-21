@@ -1,86 +1,39 @@
-<!DOCTYPE html>
 <html>
-  {% if title %}
-  <title>{{ title }} - Mettle and Grit</title>
-  {% else %}
-  <title>Mettle and Grit</title>
-  {% endif %}
-  <body>
-    <header>
-      <div class="container">
-        <h1 class="logo">M & G</h1>
-        <image src="http://e0ce29e7fb017defa956-0d1fe3f26a163bb9ea0f81dec3aba4fa.r30.cf2.rackcdn.com/icons/social_media_icons/horse-logo2.jpg" class="logo" width="100" height="100"/></image>
-        <strong><nav>
-          <ul class="menu">
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('articles') }}">Articles</a></li>
-            <li><a href="{{ url_for('calculators') }}">Calculators</a></li>
-            <li><a href="{{ url_for('generators') }}">Generators</a></li>
-            <li><a href="{{ url_for('profile') }}">Profile</a></li>
-            <li><a href="{{ url_for('search') }}">Search</a></li>
-            <li><a href="{{ url_for('login') }}">Join or Log In</a></li>
-          </ul>
-        </nav></strong>
-      </div>
-    </header>
-  </body>
-    <footer>
-      <div class="container">
-        <ul class="social_media">
-          <a href="http://URL_GOES_HERE.com" target="_blank"><img src="/static/images/icons/Facebook_Logo_Black.png" class="social" width="50" height="50"/></a>
-          <a href="http://URL_GOES_HERE.com" target="_blank"><img src="/static/images/icons/Instagram_Logo_Black.png" class="social" width="50" height="50"/></a>
-          <a href="http://URL_GOES_HERE.com" target="_blank"><img src="/static/images/icons/LinkedIn_Logo_Black.png" class="social" width="50" height="50"/></a>
-          <a href="http://URL_GOES_HERE.com" target="_blank"><img src="/static/images/icons/Youtube_Logo_Black.png" class="social" width="50" height="50"/></a>
-        </ul>
-      </div>
-      <h6>Copyright &copy; 'Mettle and Grit'. All Rights Reserved.
-    </footer>
+    <head>
+      <!-- Double Brakets are used for dynamic content -->
+      <!-- Jinja2 conditional statements use the "{\%...\%}" control statement. -->
+      {% if title %}
+      <title>{{ title }} - Mettle and Grit</title>
+      {% else %}
+      <title>Welcome to M&GMicroblog</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>
+            M&G Logo:
+            <!-- The Jinja2 url_for statement here is used to generate or use
+            interally mapped URLs created from the view functions. -->
+            <a href={{ url_for('index') }}>Home</a>
+            <a href={{ url_for('login') }}>Login</a>
+        </div>
+        <hr>
+        <!-- get_flased_messages() function comes from Flask. It returns a
+        list of all messages that have been registered with flash(). Once these
+        messages are processed through get_flashed_messages() function they are
+        removed from the message list -->
+        {% with message = get_flashed_messages() %}
+        {% if message %}
+        <ul>
+            {% for message in messages %}
+            <li>{{message}}</li>
+            {% endfor %}
+        <ul>
+        {% endif %}
+        {% endwith %}
+        <!-- Jinja2 block control statement defines the place where the derived
+        templates can insert themselves. Blocks are given a unique name, in
+        which derived templates can reference them when they provide thier
+        content. -->
+        {% block content %}{% endblock %}
+    </body>
 </html>
-
-
-<!--
-
-<nav/>
-		<ul>
-				<div class="dropdown">
-  					<li><a href="#Train" class="dropbtn">Train</a></li>
-  				  		<div class="dropdown-content">
-  	  						<a href="#">Weight Training Basics</a>
-    						<a href="#">Workout Database</a>
-   	 						<a href="#">Strength Training</a>
-   	 						<a href="#">Bodybuilding</a>
-   	 						<a href="#">Powerbuilding</a>
-  						</div>
-  				</div>
-  				<div class="dropdown">
-  					<li><a href="#Feast" class="dropbtn">Feast</a></li>
-  				  		<div class="dropdown-content">
-  	  						<a href="#">Nutrition Basics</a>
-    						<a href="#">Supplimenting</a>
-   	 						<a href="#">Diets and Nutrition Plans</a>
-   	 						<a href="#">Meal Prepping</a>
-   	 						<a href="#">Fuel Your Body</a>
-  						</div>
-  				</div>
-  				<div class="dropdown">
-  					<li><a href="#Live" class="dropbtn">Live</a></li>
-  				  		<div class="dropdown-content">
-    						<a href="#">The Fitness Lifestyle</a>
-   	 						<a href="#">Motivation</a>
-   	 						<a href="#">Stretching and Warmup</a>
-   	 						<a href="#">Physchology</a>
-   	 						<a href="#">Sleep</a>
-  						</div>
-  				</div>
-  				<div class="dropdown">
-  					<li><a href="#Learn" class="dropbtn">Learn</a></li>
-  						<div class="dropdown-content">
-  	  						<a href="#">Fitness Science</a>
-  	  						<a href="#">Terms and Phrases</a>
-  	  						<a href="#">Equiptment Database</a>
-  						</div>
-  				</div>
-		</ul>
-</nav>
-
--->

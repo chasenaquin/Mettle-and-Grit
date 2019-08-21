@@ -1,8 +1,18 @@
+<!-- Jinja2 Template Imheritence. "extends" establishes the inheritence link
+between the two templates. When Jinja2 renders index.html, it will know to
+embed it inside base.html. Notice the two matching block statements 'content'.
+-->
 {% extends "base.html" %}
 
 {% block content %}
-<!--    <h1>Hi, {{ user.username }}!</h1> -->
+    <h1>Hi, {{ user.username }}!</h1>
     {% for post in posts %}
     <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
     {% endfor %}
 {% endblock %}
+
+<!-- Jinja2 control statemens can be used for loops as well used in a for
+statement.
+{\% for post in posts \%}
+<div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+{\% endfor \%}

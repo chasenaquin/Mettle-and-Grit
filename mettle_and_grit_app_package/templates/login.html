@@ -1,18 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-        </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit() }}</p>
-    </form>
-{% endblock %}
+  <h1>Sign In</h1>
+  <!-- This template expects a form object instantiate from the LoginForm
+  class to be given as an argument. This argument is sent to the routes
+  view function. Ths HTML form element is used as a container for the web
+  form. the action attribute is used to tell the browser the url that should be
+  used when submitting the information that the user has entered. When the
+  action is set to an empty string the form is submitted to the URL that is
+  currently in the address bar, which is the URL that rendered the form on the
+  page. The 'method' attribute specifies that HTTP request method that should
+  be used when submitting the form to the server. Default is 'GET'. The
+  'novalidate' attribute is used to tell the web browser to not apply validation
+  to the fields, which leaves the task to the Flask application. (Server side
+  Validation ). -->
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <!-- Generates a hidden field that includes a token that is used to protect
+    the form agains CSRF attacks. Provide this field and config SECRET_KEY
+    variable defined in Flask Application. Flask-WTF does the rest. -->
+    <p>
+      <!-- The fields from the form object know how to render themselves as
+      HTML. For fields that require additional HTML attributes, those can be
+      passed as arguments. This is how you attach CSS classes or IDs to the
+      form fields.-->
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}<br>
+        <!-- Displaying / Rendering the flashed error messages -->
+        {% for error in form.username.errors %}
+        <span style="color: red;"> {{error}}</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password.lable }}<br>
+        {{ form.password(size=32) }}<br>
+        {% for error in form.password.errors %}
+        <span style="color: red;"> {{error}}</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+    <p>{{ form.submit() }}</p>
+  </form>
+  {% endblock %}
