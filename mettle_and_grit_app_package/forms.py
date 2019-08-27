@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from mettle_and_grit_app_package.models import User
 
 class LoginForm(FlaskForm):
     # For each field, and object is created as a class variable in the LoginForm
@@ -10,3 +11,23 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    # Email validator comes stock in WTForms to ensure input matches the structure of an email address.
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    # EqualTo is a stock validator in WTForms to ensure value is identical to specified field.
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+
+    # The validate_<FieldName> method causes WTForms to invoke them in addition to the stock validators
+    def validate_username(self, username):
+        user=User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Username is already registered. Please select a different username')
+
+    def validate_email(self, email):
+        email=User.query.filter_by(email=email.data).first()
+        if email is not None:
+            raise ValidationError('Email is already registered. Please enter a different email address')

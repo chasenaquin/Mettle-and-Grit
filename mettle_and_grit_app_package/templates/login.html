@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Sign In</h1>
+<h1>Sign In</h1>
   <!-- This template expects a form object instantiate from the LoginForm
   class to be given as an argument. This argument is sent to the routes
   view function. Ths HTML form element is used as a container for the web
@@ -24,21 +24,22 @@
       HTML. For fields that require additional HTML attributes, those can be
       passed as arguments. This is how you attach CSS classes or IDs to the
       form fields.-->
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
+      {{ form.username.label }}<br>
+      {{ form.username(size=32) }}<br>
         <!-- Displaying / Rendering the flashed error messages -->
         {% for error in form.username.errors %}
-        <span style="color: red;"> {{error}}</span>
+        <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
     <p>
-        {{ form.password.lable }}<br>
+        {{ form.password.label }}<br>
         {{ form.password(size=32) }}<br>
         {% for error in form.password.errors %}
-        <span style="color: red;"> {{error}}</span>
+        <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
     <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
     <p>{{ form.submit() }}</p>
-  </form>
-  {% endblock %}
+</form>
+<p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
+{% endblock %}

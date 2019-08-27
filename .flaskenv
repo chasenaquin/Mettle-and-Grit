@@ -1,0 +1,1 @@
+FLASK_APP=mettle_and_grit_app.py

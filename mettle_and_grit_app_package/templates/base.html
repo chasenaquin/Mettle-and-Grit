@@ -13,22 +13,27 @@
             M&G Logo:
             <!-- The Jinja2 url_for statement here is used to generate or use
             interally mapped URLs created from the view functions. -->
-            <a href={{ url_for('index') }}>Home</a>
-            <a href={{ url_for('login') }}>Login</a>
+            <a href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
         </div>
         <hr>
         <!-- get_flased_messages() function comes from Flask. It returns a
         list of all messages that have been registered with flash(). Once these
         messages are processed through get_flashed_messages() function they are
         removed from the message list -->
-        {% with message = get_flashed_messages() %}
-        {% if message %}
-        <ul>
-            {% for message in messages %}
-            <li>{{message}}</li>
-            {% endfor %}
-        <ul>
-        {% endif %}
+        {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
         {% endwith %}
         <!-- Jinja2 block control statement defines the place where the derived
         templates can insert themselves. Blocks are given a unique name, in
