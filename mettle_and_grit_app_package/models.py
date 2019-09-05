@@ -28,7 +28,8 @@ class User(UserMixin, mg_db_object.Model):
     email = mg_db_object.Column(mg_db_object.String(120), index=True, unique=True)
     #Security best practices to NOT store plain text passwords.
     password_hash = mg_db_object.Column(mg_db_object.String(128))
-
+    status = mg_db_object.Column(mg_db_object.String(300))
+    last_seen = mg_db_object.Column(mg_db_object.DateTime, default=datetime.utcnow)
     # NOTICE: There is an incosistenct that in some cases such as db.relationship()
     # call, the model is referenced by the model class, but in the db.ForeignKey()
     # declaration, a model is given by its database table name.
@@ -56,8 +57,8 @@ class User(UserMixin, mg_db_object.Model):
         return check_password_hash(self.password_hash, password)
 
     def avatar(self, size):
-        digest = md5(self.email.lowe().encode('utf')).hexdigest()
-        retuen 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+        digest = md5(self.email.lower().encode('utf')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
 # Flask-Login keeps track of the logged in user by storing its unique indentifier
 # in Flask's 'user session' which is a storage space assigned to each user who

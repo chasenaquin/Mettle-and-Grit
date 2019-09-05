@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from mettle_and_grit_app_package.models import User
 
 class LoginForm(FlaskForm):
@@ -31,3 +31,8 @@ class RegistrationForm(FlaskForm):
         email=User.query.filter_by(email=email.data).first()
         if email is not None:
             raise ValidationError('Email is already registered. Please enter a different email address')
+
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    status = TextAreaField('Status', validators=[Length(min=0, max=300)])
+    submit = SubmitField('Submit')

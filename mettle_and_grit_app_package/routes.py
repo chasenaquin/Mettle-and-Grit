@@ -4,10 +4,17 @@
 
 from mettle_and_grit_app_package import mg_app_object, mg_db_object
 from mettle_and_grit_app_package.models import User
-from mettle_and_grit_app_package.forms import LoginForm, RegistrationForm
+from mettle_and_grit_app_package.forms import LoginForm, RegistrationForm, EditProfileForm
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
+from datetime import datetime
+
+@mg_app_object.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        mg_db_object.session.commit()
 
 @mg_app_object.route('/')
 # @app.route is known as a decorator.File
@@ -95,3 +102,18 @@ def register():
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
+
+@mg_app_object.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.status = form.status.data
+        mg_db_object.session.commit()
+#        flash('Your changes have been saved.')
+        return redirect(url_for('user', username=current_user.username))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.status.data = current_user.status
+    return render_template('edit_profile.html', title='Edit Profile',form=form)
