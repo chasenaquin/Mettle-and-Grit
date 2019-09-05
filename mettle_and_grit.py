@@ -1,1 +1,0 @@
-from mettle_and_grit_app_package import mg_app_object
