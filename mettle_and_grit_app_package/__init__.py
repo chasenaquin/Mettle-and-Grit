@@ -8,6 +8,8 @@ from flask_login import LoginManager
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
+from flask_mail import Mail
+from werkzeug.utils import secure_filename
 
 mg_app_object = Flask(__name__)
 mg_app_object.config.from_object(Config)
@@ -52,6 +54,13 @@ if not mg_app_object.debug:
     mg_app_object.logger.setLevel(logging.INFO)
     mg_app_object.logger.info('-----===[ Mettle And Grit Flask Application Startup ]===-----')
 
+mail = Mail(mg_app_object)
+
 # The bottom import here is a workaround to 'circular imports'
 # models will define the structure of the database.
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+mg_app_object.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 from mettle_and_grit_app_package import routes, models, error

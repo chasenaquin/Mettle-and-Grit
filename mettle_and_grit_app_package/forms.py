@@ -30,7 +30,7 @@ class RegistrationForm(FlaskForm):
     def validate_email(self, email):
         email=User.query.filter_by(email=email.data).first()
         if email is not None:
-            raise ValidationError('Email is already registered. Please enter a different email address')
+            raise ValidationError('Please select a different username')
 
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -47,3 +47,13 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(username=self.username.data).first()
             if user is not None:
                 raise ValidationError('Username is already in use. Please choose a different username.')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Request Password Reset')

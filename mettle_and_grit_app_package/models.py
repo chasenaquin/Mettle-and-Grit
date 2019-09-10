@@ -12,11 +12,13 @@
 # be adding an attribute names "__tablename__" to the model class.
 
 #See more details on usages and best practices for "flask-migrate"
-from mettle_and_grit_app_package import mg_db_object, login
+from mettle_and_grit_app_package import mg_db_object, login, mg_app_object
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
+from time import time
+import jwt
 
 # Building out User Table. Class inherits from .Model.
 # Usermixin indludes generic implementations like "is_authenticated",
@@ -59,6 +61,20 @@ class User(UserMixin, mg_db_object.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            mg_app_object.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, mg_app_object.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
 
 # Flask-Login keeps track of the logged in user by storing its unique indentifier
 # in Flask's 'user session' which is a storage space assigned to each user who
