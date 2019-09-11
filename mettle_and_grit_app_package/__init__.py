@@ -10,6 +10,7 @@ from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
+from flask_bootstrap import Bootstrap
 
 mg_app_object = Flask(__name__)
 mg_app_object.config.from_object(Config)
@@ -23,6 +24,8 @@ login = LoginManager(mg_app_object)
 # Flask-Login will redirect user to login form, and only redirect back once the
 # login process is complete. The login value is the login view (routes).
 login.login_view='login'
+# bootstrap/base.html template becomes available. You can reference with the extends command
+bootstrap = Bootstrap(mg_app_object)
 
 # Runs the email logger when debug mode is DISABLED.
 if not mg_app_object.debug:
